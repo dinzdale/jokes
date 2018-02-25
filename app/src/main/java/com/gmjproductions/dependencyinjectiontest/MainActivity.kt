@@ -9,8 +9,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
-import com.gmjproductions.dependencyinjectiontest.model2.*
-import com.gmjproductions.dependencyinjectiontest.ui.MyApplication
+import com.gmjproductions.dependencyinjectiontest.model2.Joke
+import com.gmjproductions.dependencyinjectiontest.model2.JokesViewModel
+import com.gmjproductions.dependencyinjectiontest.model2.JokesViewModelFactory
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.content_main.joke_list;
 
@@ -19,10 +20,13 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    @Inject lateinit var myAsynchTask: MyAsyncTask
+    @Inject
+    lateinit var viewModelFactory: JokesViewModelFactory
+    lateinit var viewModel: JokesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
+        AndroidInjection.inject(this);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(JokesViewModel::class.java)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -31,14 +35,18 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
         joke_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        myAsynchTask.jokesViewModel.jokeListLD
-                .observe(this, object : Observer<List<Joke>> {
-                    override fun onChanged(t: List<Joke>?) {
-                        (joke_list.adapter as MyAdapter).jokeList = t!!
-                        joke_list.adapter.notifyDataSetChanged()
-                    }
-                })
-        joke_list.adapter = MyAdapter(myAsynchTask.jokesViewModel.jokeListLD.value!!)
+
+        viewModel!!.jokeListLD
+                .observe(this,
+                        object : Observer<List<Joke>> {
+                            override fun onChanged(list: List<Joke>?) {
+                                list?.let {
+                                    (joke_list.adapter as MyAdapter).jokeList = it
+                                    joke_list.adapter.notifyDataSetChanged()
+                                }
+                            }
+                        })
+        joke_list.adapter = MyAdapter(viewModel.jokeListLD.value!!)
 
     }
 
@@ -61,11 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        myAsynchTask.execute("https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten")
-        // MyAsyncTask(this).execute("https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten")
-//        val intent = Intent(this,MyIntentService::class.java)
-//        intent.putExtra(MyIntentService.URLKEY,"https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten")
-//        startService(Intent(this,MyIntentService::class.java))
+        viewModel.fetchJokes()
     }
 
     class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            jokeList?.let {
+            jokeList.let {
                 holder.joke.text = jokeList[position].setup
                 holder.punchline.text = jokeList[position].punchline
             }

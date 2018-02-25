@@ -1,9 +1,7 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -30,12 +28,10 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'android.arch.lifecycle:extensions:1.0.0'
-    //implementation "android.arch.lifecycle:reactivestreams:1.0.0"
     kapt "android.arch.lifecycle:compiler:1.0.0"
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.google.dagger:dagger:2.14.1'
-    implementation'com.google.dagger:dagger-android-support:2.14.1'
-
+    implementation 'com.google.dagger:dagger-android-support:2.14.1'
     kapt 'com.google.dagger:dagger-compiler:2.14.1'
     kapt 'com.google.dagger:dagger-android-processor:2.14.1'
     provided 'javax.annotation:jsr250-api:1.0'
