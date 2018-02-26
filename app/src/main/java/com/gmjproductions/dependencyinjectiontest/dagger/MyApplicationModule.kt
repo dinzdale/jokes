@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 
 import com.gmjproductions.dependencyinjectiontest.MainActivity
 import com.gmjproductions.dependencyinjectiontest.network.APIRepository
+import com.gmjproductions.dependencyinjectiontest.ui.JokesFragment
 import com.gmjproductions.dependencyinjectiontest.ui.MyApplication
 
 import javax.inject.Inject
@@ -28,4 +29,7 @@ import dagger.android.ContributesAndroidInjector
 abstract class MyApplicationModule {
     @ContributesAndroidInjector
     abstract fun contributeMainActivityInjector(): MainActivity
+
+    @ContributesAndroidInjector
+    abstract fun contributeJokesFragmentInjector(): JokesFragment
 }

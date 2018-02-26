@@ -1,5 +1,6 @@
 package com.gmjproductions.dependencyinjectiontest.dagger
 
+import android.content.Context
 import com.gmjproductions.dependencyinjectiontest.MainActivity
 import com.gmjproductions.dependencyinjectiontest.ui.MyApplication
 
@@ -14,4 +15,3 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(AndroidInjectionModule::class, MyApplicationModule::class, APIRepositoryModule::class, ViewModelProvider::class))
 interface MyApplicationComponent : AndroidInjector<MyApplication>
-
