@@ -26,14 +26,13 @@ class JokeListFetcher @Inject constructor(val url: String) : APIRepository {
 
     override fun loadNewJokeList(context: Context) {
         val db = JokesDatabase.getInstance(context)
-        val future = executor.submit(object : Callable<List<Joke>> {
-            override fun call(): List<Joke> {
+        executor.submit(object : Runnable {
+            override fun run() {
                 val url = URL(url)
                 val urlc = url.openConnection()
                 val br = BufferedReader(InputStreamReader(urlc.getInputStream()))
                 val token = object : TypeToken<ArrayList<Joke>>() {}.type
                 val jokeList: List<Joke> = Gson().fromJson(br, token)
-                return jokeList
                 jokeList.forEach {
                     db.jokesDao().insertJoke(it)
                     it.type?.let {
@@ -41,8 +40,8 @@ class JokeListFetcher @Inject constructor(val url: String) : APIRepository {
                     }
                 }
             }
-        }).get()
-
+        }
+        )
     }
 
 

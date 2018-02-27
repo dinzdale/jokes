@@ -13,11 +13,10 @@ data class JokeType(@ColumnInfo(name = "joke_type") @PrimaryKey var type: String
 
 
 @Entity(tableName = "jokes")
-class Joke() {
-    @PrimaryKey
-    var id: Int = 0
-    var type: String? = null
-    var setup: String? = null
-    var punchline: String? = null
-}
+data class Joke(
+        @PrimaryKey
+        var id: Int = 0,
+        var type: String? = null,
+        var setup: String? = null,
+        var punchline: String? = null)
 

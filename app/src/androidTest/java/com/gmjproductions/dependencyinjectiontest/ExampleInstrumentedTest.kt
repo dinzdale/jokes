@@ -19,6 +19,8 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
+        assertNotNull(appContext)
+        assertNotNull(appContext.applicationContext)
         assertEquals("com.gmjproductions.dependencyinjectiontest", appContext.packageName)
     }
 }
