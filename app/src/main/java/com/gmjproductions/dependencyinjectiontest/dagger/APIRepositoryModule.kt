@@ -19,16 +19,16 @@ class APIRepositoryModule() {
     val urlS = "https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_ten"
     @Provides
     @Named("URL")
-    fun provideURL() : String = urlS
+    fun provideURL(): String = urlS
 
     @Provides
     fun provideContext(application: MyApplication): Context = application
 
-//    @Provides
-//    @Singleton
-//    fun provideDatabase(context: Context): JokesDatabase = JokesDatabase.getInstance(context)
+    @Provides
+    @Singleton
+    fun provideDatabase(context: Context): JokesDatabase = JokesDatabase.getInstance(context)
 
     @Provides
     @Singleton
-    fun providesAPIRepository(@Named("URL") url: String): APIRepository = JokeListFetcher(urlS)
+    fun providesAPIRepository(@Named("URL") url: String, jokesDatabase: JokesDatabase): APIRepository = JokeListFetcher(urlS, jokesDatabase)
 }

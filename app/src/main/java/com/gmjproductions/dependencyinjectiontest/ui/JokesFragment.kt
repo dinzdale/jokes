@@ -17,6 +17,7 @@ import com.gmjproductions.dependencyinjectiontest.R
 import com.gmjproductions.dependencyinjectiontest.model.Joke
 import com.gmjproductions.dependencyinjectiontest.model.JokesViewModel
 import com.gmjproductions.dependencyinjectiontest.model.JokesViewModelFactory
+import com.gmjproductions.dependencyinjectiontest.network.APIRepository
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.jokes_fragment_layout.*
@@ -30,13 +31,17 @@ class JokesFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: JokesViewModelFactory
-    lateinit var viewModel: JokesViewModel
+
+    lateinit var viewModel : JokesViewModel
+
+    @Inject
+    lateinit var apiRepository: APIRepository
+
     lateinit var myActivity: FragmentActivity
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-
         return inflater!!.inflate(R.layout.jokes_fragment_layout, null)
     }
 
@@ -49,7 +54,7 @@ class JokesFragment : Fragment() {
         viewModel = ViewModelProviders.of(myActivity, viewModelFactory).get(JokesViewModel::class.java)
 
         load_jokes_btn.setOnClickListener {
-            viewModel.fetchNewJokes()
+            viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
         }
 
         jokes_list.layoutManager = LinearLayoutManager(myActivity, LinearLayout.VERTICAL, false)
@@ -74,7 +79,7 @@ class JokesFragment : Fragment() {
     class JokesListAdapter(val context: Context, var list: List<Joke>) : RecyclerView.Adapter<JokesListViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): JokesListViewHolder {
-            return JokesListViewHolder(LayoutInflater.from(context).inflate(R.layout.jokes_fragment_layout, null))
+            return JokesListViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, null))
         }
 
         override fun getItemCount(): Int {

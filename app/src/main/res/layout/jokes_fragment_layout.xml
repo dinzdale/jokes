@@ -7,6 +7,7 @@
 
     <Button
         android:id="@+id/load_jokes_btn"
+        android:text="@string/load_jokes_label"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

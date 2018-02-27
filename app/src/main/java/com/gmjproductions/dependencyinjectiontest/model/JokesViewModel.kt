@@ -16,21 +16,18 @@ import javax.inject.Inject
  */
 
 
-data class JokesViewModelFactory @Inject constructor(val context: Context, val apiRepository: APIRepository) : ViewModelProvider.NewInstanceFactory() {
+class JokesViewModelFactory @Inject constructor() : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return JokesViewModel(context, apiRepository) as T
+        return JokesViewModel() as T
     }
 }
 
-data class JokesViewModel(val context: Context, val apiRepository: APIRepository) : ViewModel() {
+class JokesViewModel() : ViewModel() {
     var jokeListLD = MutableLiveData<List<Joke>>()
 
     init {
         jokeListLD.value = emptyList()
     }
-
-    //TODO this should be abstracted out of the viewmodel
-    fun fetchNewJokes() = apiRepository.loadNewJokeList(context)
 
 
 //    fun fetchAllJokes() {
