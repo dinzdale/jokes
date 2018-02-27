@@ -1,5 +1,6 @@
 package com.gmjproductions.dependencyinjectiontest.database
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
 import com.gmjproductions.dependencyinjectiontest.model.Joke

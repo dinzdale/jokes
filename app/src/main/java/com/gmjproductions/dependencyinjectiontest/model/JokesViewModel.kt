@@ -1,9 +1,6 @@
 package com.gmjproductions.dependencyinjectiontest.model
 
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.*
 import android.content.Context
 import com.gmjproductions.dependencyinjectiontest.database.JokesDatabase
 import com.gmjproductions.dependencyinjectiontest.network.APIRepository
@@ -24,15 +21,11 @@ class JokesViewModelFactory @Inject constructor() : ViewModelProvider.NewInstanc
 
 class JokesViewModel() : ViewModel() {
     var jokeListLD = MutableLiveData<List<Joke>>()
+    var jokeTypesLD = MutableLiveData<List<JokeType>>()
 
     init {
         jokeListLD.value = emptyList()
+        jokeTypesLD.value = emptyList()
     }
-
-
-//    fun fetchAllJokes() {
-//        val db = JokesDatabase.getInstance()
-//        jokeListLD.value = db!!.jokesDao().getAllJokes()
-//    }
 
 }

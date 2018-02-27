@@ -1,5 +1,7 @@
 package com.gmjproductions.dependencyinjectiontest.network
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -25,8 +27,8 @@ import javax.inject.Inject
  */
 class JokeListFetcher @Inject constructor(val url: String, val database: JokesDatabase) : APIRepository {
     val executor: ExecutorService = Executors.newSingleThreadExecutor()
-    override fun loadNewJokeList(): List<Joke> {
 
+    override fun loadNewJokeList(): List<Joke> {
         val call = executor.submit(object : Callable<List<Joke>> {
             override fun call(): List<Joke> {
                 val url = URL(url)
@@ -46,4 +48,32 @@ class JokeListFetcher @Inject constructor(val url: String, val database: JokesDa
         )
         return call.get()
     }
+
+    override fun loadAllJokesFromDB(): List<Joke> {
+       val future = executor.submit( object : Callable<List<Joke>> {
+           override fun call(): List<Joke> {
+               return database.jokesDao().getAllJokes()
+           }
+       })
+        return future.get()
+    }
+
+    override fun loadAllJokeTypesFromDB(): List<JokeType> {
+        val future = executor.submit( object : Callable<List<JokeType>> {
+            override fun call(): List<JokeType> {
+                return database.jokesDao().getAllJokeTypes()
+            }
+        })
+        return future.get()
+    }
+
+    override fun loadAllJokesOfTypeFromDB(jokeType: JokeType): List<Joke> {
+        val future = executor.submit( object : Callable<List<Joke>> {
+            override fun call(): List<Joke> {
+                return database.jokesDao().getJokesOfType(jokeType)
+            }
+        })
+        return future.get()
+    }
+
 }

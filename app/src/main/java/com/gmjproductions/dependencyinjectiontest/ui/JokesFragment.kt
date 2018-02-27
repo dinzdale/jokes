@@ -11,10 +11,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.SpinnerAdapter
 import android.widget.TextView
 import com.gmjproductions.dependencyinjectiontest.R
 import com.gmjproductions.dependencyinjectiontest.model.Joke
+import com.gmjproductions.dependencyinjectiontest.model.JokeType
 import com.gmjproductions.dependencyinjectiontest.model.JokesViewModel
 import com.gmjproductions.dependencyinjectiontest.model.JokesViewModelFactory
 import com.gmjproductions.dependencyinjectiontest.network.APIRepository
@@ -32,7 +35,7 @@ class JokesFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: JokesViewModelFactory
 
-    lateinit var viewModel : JokesViewModel
+    lateinit var viewModel: JokesViewModel
 
     @Inject
     lateinit var apiRepository: APIRepository
@@ -55,10 +58,13 @@ class JokesFragment : Fragment() {
 
         load_jokes_btn.setOnClickListener {
             viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
+            viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
         }
 
         jokes_list.layoutManager = LinearLayoutManager(myActivity, LinearLayout.VERTICAL, false)
         jokes_list.adapter = JokesListAdapter(myActivity, viewModel.jokeListLD.value!!)
+
+        joke_types_spinner.adapter = ArrayAdapter<String>(myActivity, android.R.layout.simple_spinner_dropdown_item)
 
         viewModel.jokeListLD.observe(myActivity, object : Observer<List<Joke>> {
             override fun onChanged(jokeList: List<Joke>?) {
@@ -69,6 +75,24 @@ class JokesFragment : Fragment() {
                 }
             }
         })
+
+        viewModel.jokeTypesLD.observe(myActivity, object : Observer<List<JokeType>> {
+            override fun onChanged(jokeTypeList: List<JokeType>?) {
+                jokeTypeList?.let {
+                    loadSpinner(it)
+                }
+            }
+        })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
+        viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
+    }
+
+    private fun loadSpinner(jokeTypeList: List<JokeType>) {
+        joke_types_spinner.adapter = ArrayAdapter<JokeType>(myActivity, android.R.layout.simple_spinner_dropdown_item, jokeTypeList)
     }
 
     class JokesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -91,4 +115,6 @@ class JokesFragment : Fragment() {
             holder.punchline.text = list[position].punchline
         }
     }
+
+
 }
