@@ -39,6 +39,7 @@ class JokesFragment : Fragment() {
 
     lateinit var myActivity: FragmentActivity
 
+    val allJokeType = JokeType("ALL")
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -54,9 +55,11 @@ class JokesFragment : Fragment() {
         viewModel = ViewModelProviders.of(myActivity, viewModelFactory).get(JokesViewModel::class.java)
 
         load_jokes_btn.setOnClickListener {
-            viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
-            joke_types_spinner.adapter = null
-            viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
+            //viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
+            apiRepository.loadNewJokeList()
+            val list = apiRepository.loadAllJokeTypesFromDB().toMutableList()
+            list.add(0, allJokeType)
+            viewModel.jokeTypesLD.value = list
         }
 
         jokes_list.layoutManager = LinearLayoutManager(myActivity, LinearLayout.VERTICAL, false)
@@ -91,15 +94,20 @@ class JokesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
-        viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
+        load_jokes_btn.performClick()
+        //viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
+        //viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
     }
 
     val spinnerSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
             adapterView?.let {
                 val item = it.getItemAtPosition(pos) as JokeType
-                viewModel.jokeListLD.value = apiRepository.loadAllJokesOfTypeFromDB(item)
+                if (item == allJokeType) {
+                    viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
+                } else {
+                    viewModel.jokeListLD.value = apiRepository.loadAllJokesOfTypeFromDB(item)
+                }
             }
         }
 
@@ -108,8 +116,6 @@ class JokesFragment : Fragment() {
     }
 
     private fun loadSpinner(jokeTypeList: List<JokeType>) {
-        joke_types_spinner.removeCallbacks {  }
-        joke_types_spinner.onItemSelectedListener = null
         joke_types_spinner.adapter = ArrayAdapter<JokeType>(myActivity, android.R.layout.simple_spinner_dropdown_item, jokeTypeList)
         joke_types_spinner.onItemSelectedListener = spinnerSelected
     }
