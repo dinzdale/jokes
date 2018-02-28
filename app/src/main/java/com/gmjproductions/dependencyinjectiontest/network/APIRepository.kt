@@ -15,4 +15,5 @@ interface APIRepository {
     fun loadAllJokesFromDB(): List<Joke>
     fun loadAllJokeTypesFromDB(): List<JokeType>
     fun loadAllJokesOfTypeFromDB(jokeType: JokeType): List<Joke>
+    fun deleteAllFromDB()
 }

@@ -29,10 +29,18 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
-        fragmentManager
-                .beginTransaction()
-                .replace(R.id.joke_list_container, JokesFragment())
-                .commit()
+        val configChange: Boolean = savedInstanceState?.getBoolean("configchange") ?: false
+        if (!configChange) {
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.joke_list_container, JokesFragment())
+                    .commit()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putBoolean("configchange", true)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

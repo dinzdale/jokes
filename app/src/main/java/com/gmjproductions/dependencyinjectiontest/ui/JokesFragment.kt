@@ -83,6 +83,12 @@ class JokesFragment : Fragment() {
                 }
             }
         })
+
+        delete_all.setOnClickListener {
+            apiRepository.deleteAllFromDB()
+            viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
+            viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
+        }
     }
 
     override fun onResume() {

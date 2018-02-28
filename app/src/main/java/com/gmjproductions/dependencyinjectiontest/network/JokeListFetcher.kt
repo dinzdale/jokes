@@ -76,4 +76,13 @@ class JokeListFetcher @Inject constructor(val url: String, val database: JokesDa
         return future.get()
     }
 
+    override fun deleteAllFromDB() {
+        val future = executor.submit( object : Runnable {
+            override fun run() {
+                val dao = database.jokesDao()
+                dao.deleteJokes(dao.getAllJokes())
+                dao.deleteJokeTypes(dao.getAllJokeTypes())
+            }
+        })
+    }
 }

@@ -7,32 +7,54 @@
 
     <Button
         android:id="@+id/load_jokes_btn"
-        android:text="@string/load_jokes_label"
-        android:layout_width="180dp"
+        android:layout_width="117dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:text="@string/load_jokes_label"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/joke_types_spinner"
-        android:layout_width="180dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="128dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/load_jokes_btn" />
+        app:layout_constraintStart_toStartOf="@+id/filter_lbl"
+        app:layout_constraintTop_toBottomOf="@+id/filter_lbl" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/jokes_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/load_jokes_btn"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/filter_lbl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="filter"
+        android:textStyle="bold|italic"
+        android:typeface="normal"
+        app:layout_constraintStart_toEndOf="@+id/load_jokes_btn"
+        app:layout_constraintTop_toTopOf="@+id/load_jokes_btn" />
+
+    <Button
+        android:id="@+id/delete_all"
+        android:layout_width="118dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/delete_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/filter_lbl" />
 
 </android.support.constraint.ConstraintLayout>
