@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DependencyInjectionTest</string>
+    <string name="app_name">Dumb Jokes</string>
     <string name="action_settings">Settings</string>
     <string name="load_jokes_label">load more jokes</string>
     <string name="filter_label">filter</string>

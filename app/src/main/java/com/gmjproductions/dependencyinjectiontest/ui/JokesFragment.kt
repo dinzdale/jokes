@@ -11,10 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.SpinnerAdapter
-import android.widget.TextView
+import android.widget.*
 import com.gmjproductions.dependencyinjectiontest.R
 import com.gmjproductions.dependencyinjectiontest.model.Joke
 import com.gmjproductions.dependencyinjectiontest.model.JokeType
@@ -58,6 +55,7 @@ class JokesFragment : Fragment() {
 
         load_jokes_btn.setOnClickListener {
             viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
+            joke_types_spinner.adapter = null
             viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
         }
 
@@ -97,8 +95,23 @@ class JokesFragment : Fragment() {
         viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
     }
 
+    val spinnerSelected = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, pos: Int, p3: Long) {
+            adapterView?.let {
+                val item = it.getItemAtPosition(pos) as JokeType
+                viewModel.jokeListLD.value = apiRepository.loadAllJokesOfTypeFromDB(item)
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+        }
+    }
+
     private fun loadSpinner(jokeTypeList: List<JokeType>) {
+        joke_types_spinner.removeCallbacks {  }
+        joke_types_spinner.onItemSelectedListener = null
         joke_types_spinner.adapter = ArrayAdapter<JokeType>(myActivity, android.R.layout.simple_spinner_dropdown_item, jokeTypeList)
+        joke_types_spinner.onItemSelectedListener = spinnerSelected
     }
 
     class JokesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
