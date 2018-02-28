@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey
  * Created by garyjacobs on 1/25/18.
  */
 @Entity(tableName = "joketype")
-class JokeType(@ColumnInfo(name = "joke_type") @PrimaryKey var type: String) {
+data class JokeType(@ColumnInfo(name = "joke_type") @PrimaryKey var type: String) {
     override fun toString(): String {
         return type
     }

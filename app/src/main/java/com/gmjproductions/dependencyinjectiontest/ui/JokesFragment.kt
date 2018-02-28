@@ -21,6 +21,7 @@ import com.gmjproductions.dependencyinjectiontest.network.APIRepository
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.jokes_fragment_layout.*
+import java.lang.Boolean.getBoolean
 import javax.inject.Inject
 
 
@@ -39,7 +40,16 @@ class JokesFragment : Fragment() {
 
     lateinit var myActivity: FragmentActivity
 
-    val allJokeType = JokeType("ALL")
+    val allJokeType = JokeType(ALL)
+    val lastJokeType = JokeType(ALL)
+
+    var configChanged = false
+
+    companion object {
+        val ALL = "ALL"
+        val CONFIGCHANGED = "CONFIGCHANGED"
+        val SELECTEDTYPE = "SELECTEDTYPE"
+    }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -50,12 +60,21 @@ class JokesFragment : Fragment() {
 
         AndroidInjection.inject(this)
         super.onViewCreated(view, savedInstanceState)
+        configChanged = savedInstanceState?.let {
+            it.getBoolean(CONFIGCHANGED)
+        } ?: false
+
+        if (configChanged) {
+            savedInstanceState?.getString(SELECTEDTYPE)?.let {
+                lastJokeType.type = it
+            }
+        }
+
         myActivity = activity as FragmentActivity
 
         viewModel = ViewModelProviders.of(myActivity, viewModelFactory).get(JokesViewModel::class.java)
 
         load_jokes_btn.setOnClickListener {
-            //viewModel.jokeListLD.value = apiRepository.loadNewJokeList()
             apiRepository.loadNewJokeList()
             val list = apiRepository.loadAllJokeTypesFromDB().toMutableList()
             list.add(0, allJokeType)
@@ -92,11 +111,25 @@ class JokesFragment : Fragment() {
         }
     }
 
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.let {
+            if (joke_types_spinner.adapter.isEmpty) {
+                it.putBoolean(CONFIGCHANGED, false)
+            } else {
+                it.putString(SELECTEDTYPE, (joke_types_spinner.selectedItem as JokeType).type)
+                it.putBoolean(CONFIGCHANGED, true)
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        load_jokes_btn.performClick()
-        //viewModel.jokeListLD.value = apiRepository.loadAllJokesFromDB()
-        //viewModel.jokeTypesLD.value = apiRepository.loadAllJokeTypesFromDB()
+        if (!configChanged) {
+            load_jokes_btn.performClick()
+        }
+        configChanged = false
     }
 
     val spinnerSelected = object : AdapterView.OnItemSelectedListener {
@@ -118,6 +151,10 @@ class JokesFragment : Fragment() {
     private fun loadSpinner(jokeTypeList: List<JokeType>) {
         joke_types_spinner.adapter = ArrayAdapter<JokeType>(myActivity, android.R.layout.simple_spinner_dropdown_item, jokeTypeList)
         joke_types_spinner.onItemSelectedListener = spinnerSelected
+        if (configChanged) {
+            val pos = (joke_types_spinner.adapter as ArrayAdapter<JokeType>).getPosition(lastJokeType)
+            joke_types_spinner.setSelection(pos)
+        }
     }
 
     class JokesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
