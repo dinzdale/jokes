@@ -4,4 +4,6 @@
     <string name="load_jokes_label">load more jokes</string>
     <string name="filter_label">filter</string>
     <string name="delete_label">delete jokes</string>
+    <string name="question">Q) %1$s</string>
+    <string name="answer">A) %1$s !</string>
 </resources>

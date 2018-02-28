@@ -117,8 +117,8 @@ class JokesFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: JokesListViewHolder, position: Int) {
-            holder.setup.text = list[position].setup
-            holder.punchline.text = list[position].punchline
+            holder.setup.text = context.getString(R.string.question, list[position].setup)
+            holder.punchline.text = context.getString(R.string.answer, list[position].punchline)
         }
     }
 

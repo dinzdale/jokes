@@ -1,16 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="10dp"
+    app:contentPadding="10dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/setup"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/punchline"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/setup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="casual"
+            android:text="Q) why did the chicken cross the road ?"
+            android:textAlignment="viewStart"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@android:color/holo_red_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/punchline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/punchline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="16dp"
+            android:fontFamily="casual"
+            android:text="A) to get to the other side !"
+            android:textAlignment="viewStart"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="@android:color/holo_green_dark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/setup"
+            app:layout_constraintTop_toBottomOf="@+id/setup" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
